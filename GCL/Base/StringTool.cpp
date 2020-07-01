@@ -54,7 +54,10 @@ std::vector<std::string> StringTool::SplitAndTrim(const std::string& str, char c
 	}
 
 	if (posH < str.length()) {
-		ret.emplace_back(std::move(Trim(str.substr(posH, str.length() - posH))));
+		auto dest = std::move(Trim(str.substr(posH, str.length() - posH)));
+		if (!dest.empty()) {
+			ret.emplace_back(dest);
+		}
 	}
 
 	return ret;

@@ -1,5 +1,6 @@
 #include "StringTool.h"
 #include "TypeTool.h"
+#include <random>
 
 using namespace GCL::Base;
 
@@ -45,7 +46,10 @@ std::vector<std::string> StringTool::SplitAndTrim(const std::string& str, char c
 			posH = i + 1;
 			continue;
 		}
-		ret.emplace_back(std::move(Trim(str.substr(posH, i - posH))));
+		auto dest = std::move(Trim(str.substr(posH, i - posH)));
+		if (!dest.empty()) {
+			ret.emplace_back(dest);
+		}
 		posH = i + 1;
 	}
 
@@ -55,16 +59,33 @@ std::vector<std::string> StringTool::SplitAndTrim(const std::string& str, char c
 
 	return ret;
 }
-std::string StringTool::Trim(const std::string& str) {
+std::string StringTool::Trim(const std::string& str, const std::set<char>& c) {
 	if (str.empty()) {
 		return "";
 	}
-	auto posH = str.find_first_not_of(' ');
-	if (posH == -1) {
+	std::size_t posH = 0;
+	for (auto i = 0u; i < str.size(); ++i) {
+		char p = str[i];
+		if (c.find(p) == c.end()) {
+			break;
+		}
+		posH = i + 1;
+	}
+	std::size_t posE = 0;
+	for (int i = (int)str.size() - 1; i >= 0; --i) {
+		char p = str[i];
+		if (c.find(p) == c.end()) {
+			break;
+		}
+		posE = i;
+	}
+	if ((posH == 0) && (posE == 0)) {
+		return str;
+	}
+	if (posH >= posE) {
 		return "";
 	}
-	auto posE = str.find_last_not_of(' ');
-	return str.substr(posH, posE - posH + 1);
+	return str.substr(posH, posE - posH);
 }
 
 std::string StringTool::Replace(const std::string& str, const std::string& find, const std::string& dest) {
@@ -96,7 +117,7 @@ std::string StringTool::ToPrivateNickName(const std::string& str, bool bUTF8) {
 		char specialValue = str[i];
 		bool bSpecial = (specialValue >= 0 && specialValue <= 127);
 		std::size_t nextPos = bSpecial ? i + 1 : i + step;
-		nextPos = std::min(nextPos, str.size());
+		nextPos = std::min<std::size_t>(nextPos, str.size());
 		tempVec.emplace_back(std::move(str.substr(i, nextPos - i)));
 		i = nextPos;
 	}
@@ -105,7 +126,7 @@ std::string StringTool::ToPrivateNickName(const std::string& str, bool bUTF8) {
 	if (tempVec.size() > 0) {
 		ret += tempVec[0];
 	}
-	for (int i = 1; i < tempVec.size() - 1; ++i) {
+	for (std::size_t i = 1; i < tempVec.size() - 1; ++i) {
 		ret += "*";
 	}
 	if (tempVec.size() > 2) {

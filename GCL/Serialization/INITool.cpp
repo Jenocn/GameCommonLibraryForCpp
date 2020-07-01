@@ -5,6 +5,7 @@
 
 #include "INITool.h"
 #include "../Base/StringTool.h"
+#include <random>
 
 using namespace GCL::Serialization;
 using namespace GCL::Base;
@@ -37,7 +38,7 @@ INIPrototypeMap INITool::Parse(const std::string& src) {
 	}
 	std::unordered_map<std::string, std::string>* curHeadDict{nullptr};
 	const auto& lineStrArray = StringTool::SplitAndTrim(src, '\n');
-	for (int i = 0; i < lineStrArray.size(); ++i) {
+	for (std::size_t i = 0; i < lineStrArray.size(); ++i) {
 		const std::string& lineStr = lineStrArray[i];
 		auto length = lineStr.size();
 		if (length < 3) {

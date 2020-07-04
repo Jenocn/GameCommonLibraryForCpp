@@ -12,4 +12,5 @@
 #include "Serialization/INITool.h"
 
 #include "Pattern/MessageCenter.h"
+#include "Pattern/SimpleNotify.h"
 

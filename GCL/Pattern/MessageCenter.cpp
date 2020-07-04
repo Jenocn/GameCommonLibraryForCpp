@@ -10,8 +10,8 @@ using namespace GCL::Pattern;
 
 MessageDispatcher* MessageCenter::_messageDispatcher = new MessageDispatcher();
 
-void MessageCenter::RemoveListener(const std::string& name) {
-	_messageDispatcher->RemoveListener(name);
+void MessageCenter::RemoveListener(void* sender) {
+	_messageDispatcher->RemoveListener(sender);
 }
 
 void MessageCenter::Send(MessagePtr message) {

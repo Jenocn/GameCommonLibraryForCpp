@@ -15,8 +15,8 @@ namespace Pattern {
 class MessageCenter {
 public:
 	template <typename T>
-	static void AddListener(const std::string& name, std::function<void(std::shared_ptr<T> message)> func);
-	static void RemoveListener(const std::string& name);
+	static void AddListener(void* sender, std::function<void(std::shared_ptr<T> message)> func);
+	static void RemoveListener(void* sender);
 	static void Send(MessagePtr message);
 	static void Push(MessagePtr message);
 	static void OnDispatch();
@@ -28,8 +28,8 @@ private:
 };
 
 template <typename T>
-void MessageCenter::AddListener(const std::string& name, std::function<void(std::shared_ptr<T> message)> func) {
-	_messageDispatcher->AddListener<T>(name, func);
+void MessageCenter::AddListener(void* sender, std::function<void(std::shared_ptr<T> message)> func) {
+	_messageDispatcher->AddListener<T>(sender, func);
 }
 
 } // namespace Pattern

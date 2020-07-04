@@ -7,9 +7,9 @@
 
 using namespace GCL::Pattern;
 
-void MessageDispatcher::RemoveListener(const std::string& name)
+void MessageDispatcher::RemoveListener(void* sender)
 {
-	auto ite = _listenerMap.find(name);
+	auto ite = _listenerMap.find(sender);
 	if (ite == _listenerMap.end()) { return; }
 	delete ite->second;
 	_listenerMap.erase(ite);

@@ -1,6 +1,8 @@
-/*
+﻿/*
 	By Jenocn
 	https://jenocn.github.io/
+
+	Encoding: UTF-8 with BOM
 */
 
 #pragma once

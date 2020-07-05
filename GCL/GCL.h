@@ -10,6 +10,7 @@
 #include "Base/CheckType.h"
 
 #include "Serialization/INITool.h"
+#include "Serialization/TableContainer.h"
 
 #include "Pattern/MessageCenter.h"
 #include "Pattern/SimpleNotify.h"

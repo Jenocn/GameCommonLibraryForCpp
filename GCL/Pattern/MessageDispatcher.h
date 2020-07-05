@@ -14,7 +14,8 @@ namespace Pattern {
 class MessageDispatcher {
 public:
 	template <typename T>
-	void AddListener(void* sender, std::function<void(std::shared_ptr<T> message)> func);
+	void AddListener(void* sender, std::function<void(T*)> func);
+	template <typename T>
 	void RemoveListener(void* sender);
 	void Send(MessagePtr message);
 	void Push(MessagePtr message);
@@ -26,21 +27,41 @@ private:
 	std::list<MessagePtr>& _GetIdleQueue();
 
 private:
-	std::map<void*, IMessageListener*> _listenerMap;
-	std::map<bool, std::list<MessagePtr>> _messageQueue;
-	bool _activeQueueSign{false};
+	std::unordered_multimap<void*, IMessageListener*> _listenerMap;
+	std::unordered_map<bool, std::list<MessagePtr>> _messageQueue;
+	bool _activeQueueSign{ false };
 };
 
 template <typename T>
-void MessageDispatcher::AddListener(void* sender, std::function<void(std::shared_ptr<T> message)> func) {
+void MessageDispatcher::AddListener(void* sender, std::function<void(T*)> func) {
 	if (func == nullptr) {
 		return;
 	}
-	if (_listenerMap.find(sender) != _listenerMap.end()) {
-		return;
+	auto pair = _listenerMap.equal_range(sender);
+	auto ite = pair.first;
+	while (ite != pair.second) {
+		if (ite->second->GetMessageID() == MessageBase<T>::GetClassType()) {
+			return;
+		}
+		++ite;
 	}
+
 	auto listener = new MessageListener<T>(func);
 	_listenerMap.emplace(sender, listener);
+}
+
+template <typename T>
+void MessageDispatcher::RemoveListener(void* sender) {
+	auto pair = _listenerMap.equal_range(sender);
+	auto ite = pair.first;
+	while (ite != pair.second) {
+		if (ite->second->GetMessageID() == MessageBase<T>::GetClassType()) {
+			delete ite->second;
+			_listenerMap.erase(ite);
+			return;
+		}
+		++ite;
+	}
 }
 
 } // namespace Pattern

@@ -7,14 +7,6 @@
 
 using namespace GCL::Pattern;
 
-void MessageDispatcher::RemoveListener(void* sender)
-{
-	auto ite = _listenerMap.find(sender);
-	if (ite == _listenerMap.end()) { return; }
-	delete ite->second;
-	_listenerMap.erase(ite);
-}
-
 void MessageDispatcher::Send(MessagePtr message)
 {
 	if (!message) { return; }
@@ -24,7 +16,7 @@ void MessageDispatcher::Send(MessagePtr message)
 		auto listener = pair.second;
 		if (listener->GetMessageID() == messageID)
 		{
-			listener->Invoke(message);
+			listener->Invoke(message.get());
 		}
 	}
 }

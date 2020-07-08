@@ -52,12 +52,17 @@ public:
 
 	const std::unordered_map<TKey, TElement*>& GetTableMap() const { return _map; }
 
+	static TElement* CreateElement() {
+		return new TElement();
+	}
+
 protected:
 	void InsertElement(const TKey& key, TElement* element) {
 		_map.emplace(key, element);
 	}
-	TElement* CreateElement() const {
-		return new TElement();
+	void AssignMap(std::unordered_map<TKey, TElement*>&& dataMap) {
+		Clear();
+		_map = dataMap;
 	}
 
 private:

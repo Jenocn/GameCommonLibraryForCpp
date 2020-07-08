@@ -14,7 +14,9 @@ namespace Base {
 class StringTool {
 public:
 	static std::vector<std::string> Split(const std::string& s, char c);
+	static std::vector<std::string> Split(const std::string& s, std::set<char> c);
 	static std::vector<std::string> SplitAndTrim(const std::string& s, char c);
+	static std::vector<std::string> SplitAndTrim(const std::string& s, std::set<char> c);
 	static std::string Trim(const std::string& s, const std::set<char>& c = { ' ', '\r', '\n', '\t' });
 	static std::string Replace(const std::string& str, const std::string& find, const std::string& dest);
 	/*

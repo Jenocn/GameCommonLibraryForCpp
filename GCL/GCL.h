@@ -8,6 +8,7 @@
 #include "Base/TypeTool.h"
 #include "Base/StringTool.h"
 #include "Base/CheckType.h"
+#include "Base/PathTool.h"
 
 #include "Serialization/INITool.h"
 #include "Serialization/TableContainer.h"

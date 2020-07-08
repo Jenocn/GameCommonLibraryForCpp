@@ -5,6 +5,10 @@
 using namespace GCL::Base;
 
 std::vector<std::string> StringTool::Split(const std::string& str, char c) {
+	return Split(str, std::set<char>{ c });
+}
+
+std::vector<std::string> StringTool::Split(const std::string& str, std::set<char> c) {
 	std::vector<std::string> ret;
 	if (str.empty()) {
 		return ret;
@@ -13,7 +17,7 @@ std::vector<std::string> StringTool::Split(const std::string& str, char c) {
 
 	std::size_t posH = 0;
 	for (std::size_t i = 0; i < str.length(); ++i) {
-		if (str[i] != c) {
+		if (c.find(str[i]) == c.end()) {
 			continue;
 		}
 		if (posH == i) {
@@ -30,36 +34,22 @@ std::vector<std::string> StringTool::Split(const std::string& str, char c) {
 
 	return ret;
 }
-std::vector<std::string> StringTool::SplitAndTrim(const std::string& str, char c) {
-	std::vector<std::string> ret;
-	if (str.empty()) {
-		return ret;
-	}
-	ret.reserve(2);
 
-	std::size_t posH = 0;
-	for (std::size_t i = 0; i < str.length(); ++i) {
-		if (str[i] != c) {
-			continue;
-		}
-		if (posH == i) {
-			posH = i + 1;
-			continue;
-		}
-		auto dest = std::move(Trim(str.substr(posH, i - posH)));
-		if (!dest.empty()) {
-			ret.emplace_back(dest);
-		}
-		posH = i + 1;
-	}
-
-	if (posH < str.length()) {
-		auto dest = std::move(Trim(str.substr(posH, str.length() - posH)));
-		if (!dest.empty()) {
-			ret.emplace_back(dest);
+std::vector<std::string> StringTool::SplitAndTrim(const std::string& s, char c) {
+	return SplitAndTrim(s, std::set<char>{ c });
+}
+std::vector<std::string> StringTool::SplitAndTrim(const std::string& s, std::set<char> c) {
+	auto ret = std::move(Split(s, c));
+	auto ite = ret.begin();
+	while (ite != ret.end()) {
+		auto dest = std::move(Trim(*ite));
+		if (dest.empty()) {
+			ite = ret.erase(ite);
+		} else {
+			*ite = std::move(dest);
+			++ite;
 		}
 	}
-
 	return ret;
 }
 std::string StringTool::Trim(const std::string& str, const std::set<char>& c) {

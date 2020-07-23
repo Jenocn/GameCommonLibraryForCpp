@@ -23,11 +23,16 @@ public:
 	static long long ToInt64(const std::string& s, long long def = 0);
 	static bool ToBool(const std::string& s, bool def = 0);
 
+	static std::string ToString(char value);
 	static std::string ToString(int value);
 	static std::string ToString(double value);
 	static std::string ToString(float value);
 	static std::string ToString(long long value);
 	static std::string ToString(bool value);
+	static std::string ToString(unsigned char value);
+	static std::string ToString(unsigned int value);
+	static std::string ToString(unsigned long long value);
+
 	static std::string ToString(const std::string& format, ...);
 	static std::string ToString(const char* format, ...);
 };

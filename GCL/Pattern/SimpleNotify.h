@@ -42,5 +42,35 @@ private:
 	std::unordered_map<void*, MessageFunc> _listeners;
 };
 
+class SimpleNotifyVoid {
+public:
+	using MessageFunc = std::function<void()>;
+
+	bool AddListener(void* sender, MessageFunc func) {
+		auto ite = _listeners.find(sender);
+		if (ite == _listeners.end()) {
+			_listeners.emplace(sender, func);
+			return true;
+		}
+		return false;
+	}
+	bool RemoveListener(void* sender) {
+		auto ite = _listeners.find(sender);
+		if (ite != _listeners.end()) {
+			_listeners.erase(ite);
+			return true;
+		}
+		return false;
+	}
+	void Send() {
+		for (auto& item : _listeners) {
+			item.second();
+		}
+	}
+
+private:
+	std::unordered_map<void*, MessageFunc> _listeners;
+};
+
 } // namespace Pattern
 } // namespace GCL

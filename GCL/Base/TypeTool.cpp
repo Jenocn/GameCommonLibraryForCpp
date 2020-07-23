@@ -71,6 +71,11 @@ bool TypeTool::ToBool(const std::string& s, bool def) {
 	}
 	return def;
 }
+std::string TypeTool::ToString(char value) {
+	char ch[5]{ 0 };
+	snprintf(ch, sizeof(ch), "%d", (int)value);
+	return ch;
+}
 std::string TypeTool::ToString(int value) {
 	char ch[12]{ 0 };
 	snprintf(ch, sizeof(ch), "%d", value);
@@ -96,6 +101,21 @@ std::string TypeTool::ToString(bool value) {
 		return "true";
 	}
 	return "false";
+}
+std::string TypeTool::ToString(unsigned char value) {
+	char ch[5]{ 0 };
+	snprintf(ch, sizeof(ch), "%d", (int)value);
+	return ch;
+}
+std::string TypeTool::ToString(unsigned int value) {
+	char ch[12]{ 0 };
+	snprintf(ch, sizeof(ch), "%u", value);
+	return ch;
+}
+std::string TypeTool::ToString(unsigned long long value) {
+	char ch[24]{ 0 };
+	snprintf(ch, sizeof(ch), "%llu", value);
+	return ch;
 }
 
 static const std::size_t TYPETOOL_BUFFER_LENGTH = 512;

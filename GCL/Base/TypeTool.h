@@ -32,6 +32,11 @@ public:
 	static std::string ToString(unsigned char value);
 	static std::string ToString(unsigned int value);
 	static std::string ToString(unsigned long long value);
+#if defined(__SIZE_TYPE__)
+	static std::string ToString(__SIZE_TYPE__ value) {
+		return ToString((unsigned int)value);
+	}
+#endif
 
 	static std::string ToString(const std::string& format, ...);
 	static std::string ToString(const char* format, ...);

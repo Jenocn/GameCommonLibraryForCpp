@@ -77,3 +77,11 @@ std::string PathTool::Normalize(const std::string& path) {
 
 	return ret;
 }
+
+std::string PathTool::Extname(const std::string& filename) {
+	auto pos = filename.find_last_of('.');
+	if (pos == std::string::npos) {
+		return "";
+	}
+	return filename.substr(pos);
+}

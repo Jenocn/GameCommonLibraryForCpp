@@ -32,7 +32,7 @@ bool TypeTool::IsBool(const std::string& s) {
 }
 
 int TypeTool::ToInt(const std::string& s, int def) {
-	return (int)ToLongDouble(s, def);
+	return (int)ToInt64(s, def);
 }
 double TypeTool::ToDouble(const std::string& s, double def) {
 	return (double)ToLongDouble(s, def);

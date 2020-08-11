@@ -32,14 +32,33 @@ public:
 	static std::string ToString(unsigned char value);
 	static std::string ToString(unsigned int value);
 	static std::string ToString(unsigned long long value);
+#if defined(__APPLE__) && !defined(ANDROID)
 #if defined(__SIZE_TYPE__)
 	static std::string ToString(__SIZE_TYPE__ value) {
 		return ToString((unsigned int)value);
 	}
 #endif
+#endif
 
 	static std::string ToString(const std::string& format, ...);
 	static std::string ToString(const char* format, ...);
+
+	template<typename T>
+	static bool Equal(T a, T b) {
+		return a == b;
+	}
+	template<>
+	static bool Equal(float a, float b) {
+		return (a + FLT_EPSILON > b) && (a - FLT_EPSILON < b);
+	}
+	template<>
+	static bool Equal(const char* a, const char* b) {
+		return strcmp(a, b) == 0;
+	}
+	template<>
+	static bool Equal(double a, double b) {
+		return (a + DBL_EPSILON > b) && (a - DBL_EPSILON < b);
+	}
 };
 } // namespace Base
 } // namespace GCL

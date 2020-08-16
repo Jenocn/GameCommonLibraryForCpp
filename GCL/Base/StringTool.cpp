@@ -129,20 +129,13 @@ std::string StringTool::ToPrivateNickName(const std::string& str, bool bUTF8) {
 }
 
 std::string StringTool::ToMoneyString(long long money, char symbol) {
-	if (abs(money) < 999) {
-		return TypeTool::ToString(money);
+	std::string ret = TypeTool::ToString(abs(money));
+	int index = (int)ret.size() - 3;
+	while (index > 0) {
+		ret.insert(ret.begin() + index, symbol);
+		index -= 3;
 	}
 
-	std::string ret = TypeTool::ToString(abs(money));
-	ret.insert(ret.size() - 3, ",");
-	while (true) {
-		int index = (int)ret.find_first_of(',');
-		index -= 3;
-		if (index <= 0) {
-			break;
-		}
-		ret.insert(index, ",");
-	}
 	if (money < 0) {
 		ret.insert(0, "-");
 	}

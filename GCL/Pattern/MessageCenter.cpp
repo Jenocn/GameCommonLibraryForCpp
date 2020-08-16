@@ -26,6 +26,16 @@ void MessageCenter::Clear() {
 	_messageDispatcher->Clear();
 }
 
-MessageDispatcher* MessageCenter::GetMessageDispatcher() {
+MessageDispatcher* MessageCenter::GetCenterDispatcher() {
 	return _messageDispatcher;
+}
+
+MessageDispatcher* MessageCenter::GetCustomDispatcher(const std::string& name) {
+	auto ite = _customDispatcherMap.find(name);
+	if (ite != _customDispatcherMap.end()) {
+		return ite->second.get();
+	}
+	auto ret = std::shared_ptr<MessageDispatcher>(new MessageDispatcher());
+	_customDispatcherMap.emplace(name, ret);
+	return ret.get();
 }

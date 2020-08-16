@@ -22,10 +22,12 @@ public:
 	static void Push(MessagePtr message);
 	static void OnDispatch();
 	static void Clear();
-	static MessageDispatcher* GetMessageDispatcher();
+	static MessageDispatcher* GetCenterDispatcher();
+	static MessageDispatcher* GetCustomDispatcher(const std::string& name);
 
 private:
 	static MessageDispatcher* _messageDispatcher;
+	static std::unordered_map<std::string, std::shared_ptr<MessageDispatcher>> _customDispatcherMap;
 };
 
 template <typename T>

@@ -9,6 +9,41 @@ static bool _IsSepartor(char ch) {
 }
 
 std::string PathTool::Join(const std::initializer_list<std::string>& paths) {
+	std::string ret = "";
+	ret.reserve(64);
+	for (auto& item : paths) {
+		if (item.empty()) {
+			continue;
+		}
+		if (ret.empty()) {
+			ret = item;
+			continue;
+		}
+		if (_IsSepartor(item[0])) {
+			if (_IsSepartor(ret[ret.size() - 1])) {
+				ret += item.substr(1);
+			} else {
+				ret += item;
+			}
+		} else {
+			if (_IsSepartor(ret[ret.size() - 1])) {
+				ret += item;
+			} else {
+				ret += '/' + item;
+			}
+		}
+	}
+	if (_IsSepartor(ret[ret.size() - 1])) {
+		ret.pop_back();
+	}
+	return StringTool::Replace(ret, "\\", "/");
+}
+
+std::string PathTool::Join(const std::string& src, const std::string& dest) {
+	return Join({src, dest});
+}
+
+std::string PathTool::NormalizeJoin(const std::initializer_list<std::string>& paths) {
 	std::string ret;
 	ret.reserve(64);
 	for (const auto& item : paths) {
@@ -27,8 +62,8 @@ std::string PathTool::Join(const std::initializer_list<std::string>& paths) {
 	}
 	return Normalize(ret);
 }
-std::string PathTool::Join(const std::string& src, const std::string& dest) {
-	return Join({ src, dest });
+std::string PathTool::NormalizeJoin(const std::string& src, const std::string& dest) {
+	return NormalizeJoin({src, dest});
 }
 
 std::string PathTool::Normalize(const std::string& path) {
@@ -39,7 +74,7 @@ std::string PathTool::Normalize(const std::string& path) {
 	bool bFirstSepartor = _IsSepartor(path[0]);
 
 	std::list<std::string> tempList;
-	auto arr = std::move(StringTool::SplitAndTrim(path, { '/', '\\' }));
+	auto arr = std::move(StringTool::SplitAndTrim(path, {'/', '\\'}));
 	for (auto& item : arr) {
 		if (item == "..") {
 			if (!tempList.empty()) {

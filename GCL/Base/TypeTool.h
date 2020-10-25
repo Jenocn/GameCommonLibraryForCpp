@@ -6,6 +6,7 @@
 #pragma once
 
 #include <string>
+#include <float.h>
 #include "CheckType.h"
 
 namespace GCL {

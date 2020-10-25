@@ -9,6 +9,7 @@
 using namespace GCL::Pattern;
 
 MessageDispatcher* MessageCenter::_messageDispatcher = new MessageDispatcher();
+std::unordered_map<std::string, std::shared_ptr<MessageDispatcher>> MessageCenter::_customDispatcherMap;
 
 void MessageCenter::Send(MessagePtr message) {
 	_messageDispatcher->Send(message);

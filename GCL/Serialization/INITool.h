@@ -36,8 +36,6 @@ public:
 	/// 从Dictionary中转换为INI字符串
 	/// </summary>
 	static std::string ToString(const INIPrototypeMap& data);
-private:
-	static std::string _ParseHead(const std::string& str);
 };
 } // namespace Serialization
 } // namespace GCL

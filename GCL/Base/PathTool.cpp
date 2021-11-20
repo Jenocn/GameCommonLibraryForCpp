@@ -4,69 +4,58 @@
 
 using namespace GCL::Base;
 
-static bool _IsSepartor(char ch) {
-	return ch == '/' || ch == '\\';
-}
-
-std::string PathTool::Join(const std::initializer_list<std::string>& paths) {
+std::string PathTool::Join(const std::initializer_list<std::string>& paths, char separtor) {
 	std::string ret = "";
-	ret.reserve(64);
+	ret.reserve(paths.size() * 4);
+
 	for (auto& item : paths) {
 		if (item.empty()) {
 			continue;
 		}
-		if (ret.empty()) {
-			ret = item;
+		if (item == "/" || item == "\\") {
 			continue;
 		}
-		if (_IsSepartor(item[0])) {
-			if (_IsSepartor(ret[ret.size() - 1])) {
-				ret += item.substr(1);
-			} else {
-				ret += item;
-			}
-		} else {
-			if (_IsSepartor(ret[ret.size() - 1])) {
-				ret += item;
-			} else {
-				ret += '/' + item;
-			}
+
+		bool bSepartor1 = false;
+		bool bSepartor2 = false;
+		if (!ret.empty()) {
+			bSepartor1 = _IsSepartor(ret.back());
 		}
-	}
-	if (_IsSepartor(ret[ret.size() - 1])) {
-		ret.pop_back();
-	}
-	return StringTool::Replace(ret, "\\", "/");
-}
+		if (!item.empty()) {
+			bSepartor2 = _IsSepartor(item.front());
+		}
 
-std::string PathTool::Join(const std::string& src, const std::string& dest) {
-	return Join({src, dest});
-}
-
-std::string PathTool::NormalizeJoin(const std::initializer_list<std::string>& paths) {
-	std::string ret;
-	ret.reserve(64);
-	for (const auto& item : paths) {
-		auto path = std::move(Normalize(item));
-		if (path.empty()) {
+		if (bSepartor1 != bSepartor2) {
+			ret.append(item);
 			continue;
 		}
-		if (ret.empty()) {
-			ret = std::move(path);
+
+		if (bSepartor1) {
+			ret.append(item.substr(1));
 			continue;
 		}
-		if (!_IsSepartor(path[0])) {
-			ret.append(1, '/');
+
+		if (!ret.empty()) {
+			ret.append(1, separtor);
 		}
-		ret.append(path);
+		ret.append(item);
 	}
-	return Normalize(ret);
-}
-std::string PathTool::NormalizeJoin(const std::string& src, const std::string& dest) {
-	return NormalizeJoin({src, dest});
+
+	return ret;
 }
 
-std::string PathTool::Normalize(const std::string& path) {
+std::string PathTool::Join(const std::string& path, const std::string& add, char separtor) {
+	return Join({path, add}, separtor);
+}
+
+std::string PathTool::NormalizeJoin(const std::initializer_list<std::string>& paths, char separtor) {
+	return Normalize(Join(paths, separtor), separtor);
+}
+std::string PathTool::NormalizeJoin(const std::string& src, const std::string& dest, char separtor) {
+	return NormalizeJoin({src, dest}, separtor);
+}
+
+std::string PathTool::Normalize(const std::string& path, char separtor) {
 	if (path.empty()) {
 		return "";
 	}
@@ -100,14 +89,14 @@ std::string PathTool::Normalize(const std::string& path) {
 		if (ret.empty()) {
 			ret = std::move(item);
 		} else {
-			ret.insert(0, "/");
+			ret.insert(0, 1, separtor);
 			ret.insert(0, item);
 		}
 		tempList.pop_back();
 	}
 
 	if (bFirstSepartor) {
-		ret.insert(0, "/");
+		ret.insert(0, 1, separtor);
 	}
 
 	return ret;
@@ -119,4 +108,8 @@ std::string PathTool::Extname(const std::string& filename) {
 		return "";
 	}
 	return filename.substr(pos);
+}
+
+bool PathTool::_IsSepartor(char ch) {
+	return (ch == '/') || (ch == '\\');
 }

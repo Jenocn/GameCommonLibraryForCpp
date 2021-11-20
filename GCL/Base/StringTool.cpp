@@ -24,12 +24,12 @@ std::vector<std::string> StringTool::Split(const std::string& str, std::set<char
 			posH = i + 1;
 			continue;
 		}
-		ret.emplace_back(std::move(str.substr(posH, i - posH)));
+		ret.emplace_back(str.substr(posH, i - posH));
 		posH = i + 1;
 	}
 
 	if (posH < str.length()) {
-		ret.emplace_back(std::move(str.substr(posH, str.length() - posH)));
+		ret.emplace_back(str.substr(posH, str.length() - posH));
 	}
 
 	return ret;
@@ -39,10 +39,10 @@ std::vector<std::string> StringTool::SplitAndTrim(const std::string& s, char c) 
 	return SplitAndTrim(s, std::set<char>{ c });
 }
 std::vector<std::string> StringTool::SplitAndTrim(const std::string& s, std::set<char> c) {
-	auto ret = std::move(Split(s, c));
+	auto ret = Split(s, c);
 	auto ite = ret.begin();
 	while (ite != ret.end()) {
-		auto dest = std::move(Trim(*ite));
+		auto dest = Trim(*ite);
 		if (dest.empty()) {
 			ite = ret.erase(ite);
 		} else {
@@ -111,7 +111,7 @@ std::string StringTool::ToPrivateNickName(const std::string& str, bool bUTF8) {
 		bool bSpecial = (specialValue >= 0 && specialValue <= 127);
 		std::size_t nextPos = bSpecial ? i + 1 : i + step;
 		nextPos = std::min<std::size_t>(nextPos, str.size());
-		tempVec.emplace_back(std::move(str.substr(i, nextPos - i)));
+		tempVec.emplace_back(str.substr(i, nextPos - i));
 		i = nextPos;
 	}
 

@@ -49,7 +49,12 @@ INIPrototypeMap INITool::Parse(const std::string& src) {
 		if (COMMENTS.find(lineStr[0]) != COMMENTS.end()) {
 			continue;
 		}
-		const auto& headStr = _ParseHead(lineStr);
+
+		std::string headStr{ "" };
+		if (lineStr.front() == '[' && lineStr.back() == ']') {
+			headStr = std::move(lineStr.substr(1, length - 2));
+		}
+
 		if (!headStr.empty()) {
 			curHeadDict = &ret[headStr];
 			continue;
@@ -65,7 +70,7 @@ INIPrototypeMap INITool::Parse(const std::string& src) {
 		if (key.empty()) {
 			continue;
 		}
-		auto value = std::move(lineStr.substr(kvIndex + 1));
+		auto value = lineStr.substr(kvIndex + 1);
 		if (value.empty()) {
 			continue;
 		}
@@ -108,10 +113,3 @@ std::string INITool::ToString(const INIPrototypeMap& data) {
 	return ret;
 }
 
-std::string INITool::_ParseHead(const std::string& str) {
-	int len = str.length();
-	if (str[0] != '[' && str[len - 1] != ']') {
-		return "";
-	}
-	return str.substr(1, len - 2);
-}
